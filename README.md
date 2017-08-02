@@ -1,0 +1,2 @@
+# SpotiMute
+Mutes Spoitify Ads.
