@@ -5,3 +5,7 @@ Mutes Spoitify Ads.
 
 
 ![2](http://i.imgur.com/Vi05Add.png)
+
+
+# Download
+https://github.com/vishwenga/SpotiMute/releases
