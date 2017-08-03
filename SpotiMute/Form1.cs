@@ -99,19 +99,23 @@ namespace SpotiMute
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (Program.GetWindowTitle(spotifyID).Contains("-"))
+            try
             {
-                if (spotifyMuted)
+                if (Program.GetWindowTitle(spotifyID).Contains("-"))
                 {
-                    Program.unMuteSpotify(spotifyID);
-                    spotifyMuted = false;
+                    if (spotifyMuted)
+                    {
+                        Program.unMuteSpotify(spotifyID);
+                        spotifyMuted = false;
+                    }
+                }
+                else
+                {
+                    Program.muteSpotify(spotifyID);
+                    spotifyMuted = true;
                 }
             }
-            else
-            {
-                Program.muteSpotify(spotifyID);
-                spotifyMuted = true;
-            }
+            catch (ArgumentException error){ spotifyID = -1; startMuter(); }           
         }
 
         private void Form1_Deactivate(object sender, EventArgs e)
