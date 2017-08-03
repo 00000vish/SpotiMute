@@ -17,8 +17,30 @@ namespace SpotiMute
 
         public Form1(int inSpotifyId)
         {
-            InitializeComponent();               
+            InitializeComponent();
             spotifyID = inSpotifyId;
+            checkBox3.Checked = Properties.Settings.Default.restartSpotify;
+            startMuter();
+        }
+
+        private void startMuter()
+        {
+            if (spotifyID == -1)
+            {
+                label2.Text = "✘ waiting for Spotify... (Spotify already running? click here)";
+                label2.ForeColor = Color.Red;
+                checkBox1.Checked = true;
+                checkBox1.Enabled = false;
+                timer2.Enabled = true;
+            }
+            else
+            {                
+                label2.Text = "✔ Spotify detected";
+                label2.ForeColor = Color.Green;
+                checkBox1.Enabled = true;
+                checkBox1.Checked = false;
+                timer2.Enabled = false;
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -42,7 +64,7 @@ namespace SpotiMute
             {
                 label1.Text = "✘ SpotiMute stopped";
                 label1.ForeColor = Color.Red;
-                timer1.Stop();                
+                timer1.Stop();
             }
             else
             {
@@ -73,7 +95,7 @@ namespace SpotiMute
         {
             WindowState = FormWindowState.Normal;
             Show();
-        }    
+        }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -83,7 +105,7 @@ namespace SpotiMute
                 {
                     Program.unMuteSpotify(spotifyID);
                     spotifyMuted = false;
-                }                
+                }
             }
             else
             {
@@ -95,6 +117,38 @@ namespace SpotiMute
         private void Form1_Deactivate(object sender, EventArgs e)
         {
             Hide();
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+            if (label2.Text == "✘ waiting for Spotify... (Spotify already running? click here)")
+            {
+                MessageBox.Show(null,"If spotify is already playing music, puase it just for a second :)","SpotiMute",MessageBoxButtons.OK,MessageBoxIcon.Information);
+            }          
+        }
+
+        private void linkLabel1_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/vishwenga/SpotiMute");
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            spotifyID = Program.getSpotifyProcessId();
+            startMuter();
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox3.Checked)
+            {
+                Properties.Settings.Default.restartSpotify = true;
+            }
+            else
+            {
+                Properties.Settings.Default.restartSpotify = false;
+            }
+            Properties.Settings.Default.Save();
         }
     }
 }

@@ -18,19 +18,32 @@ namespace SpotiMute
 
         static void Main(string[] args)
         {
+            if(Properties.Settings.Default.restartSpotify)restartSpotify();
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1(getSpotifyProcessId()));
+        }
+
+        public static void restartSpotify()
+        {
+            foreach (var process in Process.GetProcessesByName("Spotify"))
+            {
+                process.Kill();
+            }
+            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Spotify\\Spotify.exe");
+        }
+
+        public static int getSpotifyProcessId()
+        {
             var hWnd = FindWindow("SpotifyMainWindow", "Spotify");
             if (hWnd == IntPtr.Zero)
-                return;
+                return -1;
 
             uint pID;
             GetWindowThreadProcessId(hWnd, out pID);
             if (pID == 0)
-                return;
-            
-
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1((int)pID));
+                return -1;
+            return (int)pID;
         }
 
         public static void muteSpotify(int id)
@@ -48,5 +61,3 @@ namespace SpotiMute
         }
     }
 }
-
-//
