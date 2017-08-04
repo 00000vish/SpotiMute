@@ -34,5 +34,17 @@ namespace SpotiMute.Properties {
                 this["restartSpotify"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool startWindow {
+            get {
+                return ((bool)(this["startWindow"]));
+            }
+            set {
+                this["startWindow"] = value;
+            }
+        }
     }
 }

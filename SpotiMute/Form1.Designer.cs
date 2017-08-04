@@ -87,6 +87,7 @@
             this.checkBox2.TabIndex = 3;
             this.checkBox2.Text = "Start with Windows";
             this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // notifyIcon1
             // 
@@ -146,9 +147,9 @@
             this.checkBox3.AutoSize = true;
             this.checkBox3.Location = new System.Drawing.Point(30, 85);
             this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(122, 17);
+            this.checkBox3.Size = new System.Drawing.Size(106, 17);
             this.checkBox3.TabIndex = 6;
-            this.checkBox3.Text = "Restart/Start Spotify";
+            this.checkBox3.Text = "Auto start Spotify";
             this.checkBox3.UseVisualStyleBackColor = true;
             this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
             // 
@@ -156,6 +157,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(325, 127);
             this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.label2);
@@ -164,6 +166,7 @@
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "SpotiMute";
             this.Deactivate += new System.EventHandler(this.Form1_Deactivate);

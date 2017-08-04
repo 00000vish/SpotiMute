@@ -26,11 +26,15 @@ namespace SpotiMute
 
         public static void restartSpotify()
         {
+            bool temp = true;
             foreach (var process in Process.GetProcessesByName("Spotify"))
             {
-                process.Kill();
+                temp = false;
+                //SendKeys.SendWait(Keys.MediaPlayPause.ToString());
+                //process.Kill();
+                //TODO pause spotify so it can be detected and then play 
             }
-            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Spotify\\Spotify.exe");
+            if(temp)System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Spotify\\Spotify.exe");
         }
 
         public static int getSpotifyProcessId()

@@ -154,5 +154,37 @@ namespace SpotiMute
             }
             Properties.Settings.Default.Save();
         }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked)
+            {
+                Properties.Settings.Default.startWindow = true;
+                Properties.Settings.Default.Save();
+                try
+                {                   
+                    Microsoft.Win32.RegistryKey regKey = default(Microsoft.Win32.RegistryKey);
+                    string KeyName = "SpotiMute";
+                    string KeyValue = Application.ExecutablePath;
+                    regKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                    regKey.SetValue(KeyName, KeyValue, Microsoft.Win32.RegistryValueKind.String);
+                    regKey.Close();
+                }
+                catch (Exception ex){}
+            }
+            else
+            {
+                Properties.Settings.Default.startWindow = false;
+                Properties.Settings.Default.Save();
+                try
+                {
+                    Microsoft.Win32.RegistryKey regKey = default(Microsoft.Win32.RegistryKey);
+                    regKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                    regKey.DeleteValue("SpotiMute", true);
+                    regKey.Close();
+                }
+                catch (Exception ex){}
+            }
+        }
     }
 }
