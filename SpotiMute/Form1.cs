@@ -12,6 +12,7 @@ namespace SpotiMute
 {
     public partial class Form1 : Form
     {
+        bool autoHide = true;
         bool spotifyMuted = false;
         int spotifyID = 0;
 
@@ -62,6 +63,7 @@ namespace SpotiMute
         {
             if (checkBox1.Checked)
             {
+                Program.unMuteSpotify(spotifyID);
                 label1.Text = "✘ SpotiMute stopped";
                 label1.ForeColor = Color.Red;
                 timer1.Stop();
@@ -76,6 +78,7 @@ namespace SpotiMute
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            autoHide = true;
             e.Cancel = true;
             Hide();
         }
@@ -87,14 +90,19 @@ namespace SpotiMute
 
         private void openSpotiMuteToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            showSpotiMute();
+        }
+
+        private void showSpotiMute()
+        {
+            autoHide = false;
             WindowState = FormWindowState.Normal;
             Show();
         }
 
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)
         {
-            WindowState = FormWindowState.Normal;
-            Show();
+            showSpotiMute();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -103,6 +111,7 @@ namespace SpotiMute
             {
                 if (Program.GetWindowTitle(spotifyID).Contains("-"))
                 {
+                    Text = "♫ " + Program.GetWindowTitle(spotifyID) + " ♫";
                     if (spotifyMuted)
                     {
                         Program.unMuteSpotify(spotifyID);
@@ -111,16 +120,17 @@ namespace SpotiMute
                 }
                 else
                 {
+                    Text = "SpotiMute";
                     Program.muteSpotify(spotifyID);
                     spotifyMuted = true;
                 }
             }
-            catch (ArgumentException error){ spotifyID = -1; startMuter(); }           
+            catch (ArgumentException){ spotifyID = -1; startMuter(); }           
         }
 
         private void Form1_Deactivate(object sender, EventArgs e)
         {
-            Hide();
+            if(autoHide) Hide();
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -157,34 +167,35 @@ namespace SpotiMute
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
+            Microsoft.Win32.RegistryKey regKey = default(Microsoft.Win32.RegistryKey);
+            regKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
             if (checkBox2.Checked)
             {
                 Properties.Settings.Default.startWindow = true;
-                Properties.Settings.Default.Save();
                 try
-                {                   
-                    Microsoft.Win32.RegistryKey regKey = default(Microsoft.Win32.RegistryKey);
+                {                                  
                     string KeyName = "SpotiMute";
-                    string KeyValue = Application.ExecutablePath;
-                    regKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-                    regKey.SetValue(KeyName, KeyValue, Microsoft.Win32.RegistryValueKind.String);
-                    regKey.Close();
+                    string KeyValue = Application.ExecutablePath;                    
+                    regKey.SetValue(KeyName, KeyValue, Microsoft.Win32.RegistryValueKind.String);                    
                 }
-                catch (Exception ex){}
+                catch (Exception){}
             }
             else
             {
-                Properties.Settings.Default.startWindow = false;
-                Properties.Settings.Default.Save();
+                Properties.Settings.Default.startWindow = false;                
                 try
                 {
-                    Microsoft.Win32.RegistryKey regKey = default(Microsoft.Win32.RegistryKey);
-                    regKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
                     regKey.DeleteValue("SpotiMute", true);
-                    regKey.Close();
                 }
-                catch (Exception ex){}
+                catch (Exception){}
             }
+            Properties.Settings.Default.Save();
+            regKey.Close();
+        }
+
+        private void linkLabel2_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Spotify\\Spotify.exe");
         }
     }
 }

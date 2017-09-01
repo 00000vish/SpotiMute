@@ -42,6 +42,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -153,12 +154,24 @@
             this.checkBox3.UseVisualStyleBackColor = true;
             this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
             // 
+            // linkLabel2
+            // 
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.Location = new System.Drawing.Point(131, 86);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(84, 13);
+            this.linkLabel2.TabIndex = 7;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "(Luanch Spotify)";
+            this.linkLabel2.Click += new System.EventHandler(this.linkLabel2_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(325, 127);
+            this.Controls.Add(this.linkLabel2);
             this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.checkBox2);
@@ -167,6 +180,7 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Form1";
             this.Text = "SpotiMute";
             this.Deactivate += new System.EventHandler(this.Form1_Deactivate);
@@ -190,6 +204,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.LinkLabel linkLabel2;
     }
 }
 
