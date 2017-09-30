@@ -109,9 +109,13 @@ namespace SpotiMute
         {
             try
             {
-                if (Program.GetWindowTitle(spotifyID).Contains("-"))
+                string songName = Program.GetWindowTitle(spotifyID);
+                if (songName.Contains("-"))
                 {
-                    Text = "♫ " + Program.GetWindowTitle(spotifyID) + " ♫";
+                    Text = "♫ " + songName + " ♫";
+                    linkLabel3.Tag = songName;
+                    linkLabel3.Visible = true;
+                    linkLabel4.Visible = true;
                     if (spotifyMuted)
                     {
                         Program.unMuteSpotify(spotifyID);
@@ -123,6 +127,8 @@ namespace SpotiMute
                     Text = "SpotiMute";
                     Program.muteSpotify(spotifyID);
                     spotifyMuted = true;
+                    linkLabel3.Visible = false;
+                    linkLabel4.Visible = false;
                 }
             }
             catch (ArgumentException){ spotifyID = -1; startMuter(); }           
@@ -196,6 +202,16 @@ namespace SpotiMute
         private void linkLabel2_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Spotify\\Spotify.exe");
+        }
+
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://genius.com/search?q=" + linkLabel3.Tag.ToString());
+        }
+
+        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.youtube.com/results?search_query=" + linkLabel3.Tag.ToString());
         }
     }
 }
