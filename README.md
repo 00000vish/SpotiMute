@@ -1,7 +1,7 @@
 # SpotiMute
 Mutes Spoitify Ads.
 
-![1](http://i.imgur.com/WQvtl7y.png)
+![1](https://imgur.com/Vy6NqmU)
 
 # Download
 https://github.com/vishwenga/SpotiMute/releases
