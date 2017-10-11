@@ -11,6 +11,9 @@ namespace SpotiMute
     static class Program
     {
         [DllImport("user32.dll")]
+        static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
         public static extern IntPtr FindWindow(string strClassName, string strWindowName);
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -18,23 +21,39 @@ namespace SpotiMute
 
         static void Main(string[] args)
         {
-            if(Properties.Settings.Default.restartSpotify)restartSpotify();
+            alreadyRunning();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1(getSpotifyProcessId()));
+            Application.Run(new Form1(getSpotifyProcessId()));           
+            
         }
 
-        public static void restartSpotify()
+        public static void alreadyRunning()
+        {
+            int procCount = 0;
+            Process[] proc = Process.GetProcesses();
+            foreach (Process item in proc)
+            {
+                if(item.ProcessName.Equals("SpotiMute"))
+                {
+                    procCount++;
+                    if(procCount>1)item.Kill();
+                }
+            }
+        }
+
+        public static void spotifyController()
         {
             bool temp = true;
             foreach (var process in Process.GetProcessesByName("Spotify"))
-            {
-                temp = false;
-                //SendKeys.SendWait(Keys.MediaPlayPause.ToString());
-                //process.Kill();
-                //TODO pause spotify so it can be detected and then play 
+            {                
+                SetForegroundWindow(process.MainWindowHandle);
+                SendKeys.SendWait(" ");
+                System.Threading.Thread.Sleep(500);
+                SendKeys.SendWait(" ");
+                temp = false;               
             }
-            if(temp)System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Spotify\\Spotify.exe");
+            if(Properties.Settings.Default.restartSpotify && temp) System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Spotify\\Spotify.exe");
         }
 
         public static int getSpotifyProcessId()

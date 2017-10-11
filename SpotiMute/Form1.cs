@@ -21,6 +21,7 @@ namespace SpotiMute
             InitializeComponent();
             spotifyID = inSpotifyId;
             checkBox3.Checked = Properties.Settings.Default.restartSpotify;
+            Program.spotifyController();
             startMuter();
         }
 
