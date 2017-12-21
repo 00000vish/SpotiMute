@@ -30,14 +30,15 @@ namespace SpotiMute
 
         public static void alreadyRunning()
         {
-            int procCount = 0;
             Process[] proc = Process.GetProcesses();
             foreach (Process item in proc)
             {
                 if(item.ProcessName.Equals("SpotiMute"))
                 {
-                    procCount++;
-                    if(procCount>1)item.Kill();
+                    if(item.Id != Process.GetCurrentProcess().Id)
+                    {
+                        item.Kill();  
+                    }
                 }
             }
         }
@@ -49,7 +50,7 @@ namespace SpotiMute
             {                
                 SetForegroundWindow(process.MainWindowHandle);
                 SendKeys.SendWait(" ");
-                System.Threading.Thread.Sleep(500);
+                System.Threading.Thread.Sleep(700);
                 SendKeys.SendWait(" ");
                 temp = false;               
             }
