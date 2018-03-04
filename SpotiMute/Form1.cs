@@ -213,6 +213,6 @@ namespace SpotiMute
         private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://www.youtube.com/results?search_query=" + linkLabel3.Tag.ToString());
-        }
+        }   
     }
 }

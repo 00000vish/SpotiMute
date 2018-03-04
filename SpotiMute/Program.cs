@@ -59,15 +59,16 @@ namespace SpotiMute
 
         public static int getSpotifyProcessId()
         {
-            var hWnd = FindWindow("SpotifyMainWindow", "Spotify");
-            if (hWnd == IntPtr.Zero)
-                return -1;
-
-            uint pID;
-            GetWindowThreadProcessId(hWnd, out pID);
-            if (pID == 0)
-                return -1;
-            return (int)pID;
+            Process[] process = Process.GetProcessesByName("Spotify");
+            int pID = -1;
+            foreach (Process item in process)
+            {
+                if (item.Id.ToString() != "")
+                {
+                    pID = item.Id;
+                }
+            }
+            return pID;
         }
 
         public static void muteSpotify(int id)
