@@ -27,7 +27,8 @@ namespace SpotiMute
             Application.Run(new Form1(getSpotifyProcessId()));           
             
         }
-
+        
+        //if the program is already running its closed
         public static void alreadyRunning()
         {
             Process[] proc = Process.GetProcesses();
@@ -43,43 +44,45 @@ namespace SpotiMute
             }
         }
 
-        public static void spotifyController()
+        //get all the process ID from the all the spotify process
+        public static int[] getSpotifyProcessId()
         {
-            bool temp = true;
-            foreach (var process in Process.GetProcessesByName("Spotify"))
-            {                
-                SetForegroundWindow(process.MainWindowHandle);
-                SendKeys.SendWait(" ");
-                System.Threading.Thread.Sleep(700);
-                SendKeys.SendWait(" ");
-                temp = false;               
-            }
-            if(Properties.Settings.Default.restartSpotify && temp) System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Spotify\\Spotify.exe");
-        }
-
-        public static int getSpotifyProcessId()
-        {
+            int index = 0;
             Process[] process = Process.GetProcessesByName("Spotify");
-            int pID = -1;
+            int[] pID = new int[] { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
             foreach (Process item in process)
             {
                 if (item.Id.ToString() != "")
                 {
-                    pID = item.Id;
+                    pID[index] = item.Id;
+                    index++;
                 }
             }
             return pID;
         }
 
-        public static void muteSpotify(int id)
+        //mutes all spotify process in the id array
+        public static void muteSpotify(int[] id)
         {
-            VolumeMixer.SetApplicationVolume(id, 0f);
-        }
-        public static void unMuteSpotify(int id)
+            foreach (var item in id)
+            {
+                if(item != -1)
+                VolumeMixer.SetApplicationVolume(item, 0f);
+            }
+
+        } 
+        
+        //unmute all spotify process in the id array
+        public static void unMuteSpotify(int[] id)
         {
-            VolumeMixer.SetApplicationVolume(id, 100f);
+            foreach (var item in id)
+            {
+                if (item != -1)
+                VolumeMixer.SetApplicationVolume(item, 100f);
+            }           
         }
 
+        //getWindow title of spotify
         public static string GetWindowTitle(int processId)
         {
             return Process.GetProcessById(processId).MainWindowTitle;

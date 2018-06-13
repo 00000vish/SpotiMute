@@ -13,58 +13,42 @@ namespace SpotiMute
 {
     public partial class Form1 : Form
     {
-        bool autoHide = true;
-        bool spotifyMuted = false;
-        int spotifyID = 0;
 
-        public Form1(int inSpotifyId)
+        bool spotifyMuted = false;
+        int[] spotifyID = null;
+
+        //init logics
+        public Form1(int[] inSpotifyId)
         {
             InitializeComponent();
             spotifyID = inSpotifyId;
+            checkBox2.Checked = Properties.Settings.Default.startWindow;
             checkBox3.Checked = Properties.Settings.Default.restartSpotify;
-            Program.spotifyController();
             startMuter();
         }
 
         private void startMuter()
         {
-            if (spotifyID == -1)
+            if (spotifyID[0] == -1)
             {
-                label2.Text = "✘ waiting for Spotify... (Spotify already running? click here)";
+                label2.Text = "✘ waiting for Spotify...";
                 label2.ForeColor = Color.Red;
                 checkBox1.Checked = true;
-                checkBox1.Enabled = false;
-                timer2.Enabled = true;
-                linkLabel2.Visible = true  ;
+                checkBox1.Enabled = false;                
+                linkLabel2.Visible = true;
                 linkLabel2.Text = "(Luanch Spotify)";
             }
             else
-            {                
+            {
                 label2.Text = "✔ Spotify detected";
                 label2.ForeColor = Color.Green;
                 checkBox1.Enabled = true;
-                checkBox1.Checked = false;
-                timer2.Enabled = false;
-                linkLabel2.Visible = true;
-                linkLabel2.Text = "(Not working?)";
+                checkBox1.Checked = false;                
+                linkLabel2.Visible = false;
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Program.muteSpotify(spotifyID);
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            Program.unMuteSpotify(spotifyID);
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show(Program.GetWindowTitle(spotifyID));
-        }
-
+        //controls is spotiMute is enabled or not
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox1.Checked)
@@ -82,41 +66,54 @@ namespace SpotiMute
             }
         }
 
+        //stop from closing when x is clicked, instead hides
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            autoHide = true;
             e.Cancel = true;
             Hide();
         }
 
+        //close when quit is clicked
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Environment.Exit(0);
         }
 
+        //show when open button is clicked
         private void openSpotiMuteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            showSpotiMute();
-        }
-
-        private void showSpotiMute()
-        {
-            autoHide = false;
-            WindowState = FormWindowState.Normal;
             Show();
         }
 
+        //show when double click on icon
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)
         {
-            showSpotiMute();
+            Show();
         }
 
+        //decide if ad is playing or not and control mute and unmute 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            bool adPlaying = true;
+            string songName = "";
             try
             {
-                string songName = Program.GetWindowTitle(spotifyID);
-                if (songName.Contains("-"))
+                foreach (var item in spotifyID)
+                {
+                    if (item != -1)
+                    {
+                        String tempsongName = Program.GetWindowTitle(item);
+                        if (tempsongName.Contains("-"))
+                        {
+                            songName = tempsongName;
+
+                            adPlaying = false;
+
+                        }
+                    }
+                }
+
+                if (!adPlaying)
                 {
                     Text = "♫ " + songName + " ♫";
                     linkLabel3.Tag = songName;
@@ -137,33 +134,10 @@ namespace SpotiMute
                     linkLabel4.Visible = false;
                 }
             }
-            catch (ArgumentException){ spotifyID = -1; startMuter(); }           
+            catch (ArgumentException) { spotifyID[0] = -1; startMuter(); }
         }
-
-        private void Form1_Deactivate(object sender, EventArgs e)
-        {
-            if(autoHide) Hide();
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-            if (label2.Text == "✘ waiting for Spotify... (Spotify already running? click here)")
-            {
-                MessageBox.Show(null,"If spotify is already playing music, puase it just for a second :)","SpotiMute",MessageBoxButtons.OK,MessageBoxIcon.Information);
-            }          
-        }
-
-        private void linkLabel1_Click(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start("https://github.com/vishwenga/SpotiMute");
-        }
-
-        private void timer2_Tick(object sender, EventArgs e)
-        {
-            spotifyID = Program.getSpotifyProcessId();
-            startMuter();
-        }
-
+        
+        //auto start spotify
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox3.Checked)
@@ -177,6 +151,7 @@ namespace SpotiMute
             Properties.Settings.Default.Save();
         }
 
+        //add autostart registry key
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
             Microsoft.Win32.RegistryKey regKey = default(Microsoft.Win32.RegistryKey);
@@ -185,50 +160,48 @@ namespace SpotiMute
             {
                 Properties.Settings.Default.startWindow = true;
                 try
-                {                                  
+                {
                     string KeyName = "SpotiMute";
-                    string KeyValue = Application.ExecutablePath;                    
-                    regKey.SetValue(KeyName, KeyValue, Microsoft.Win32.RegistryValueKind.String);                    
+                    string KeyValue = Application.ExecutablePath;
+                    regKey.SetValue(KeyName, KeyValue, Microsoft.Win32.RegistryValueKind.String);
                 }
-                catch (Exception){}
+                catch (Exception) { }
             }
             else
             {
-                Properties.Settings.Default.startWindow = false;                
+                Properties.Settings.Default.startWindow = false;
                 try
                 {
                     regKey.DeleteValue("SpotiMute", true);
                 }
-                catch (Exception){}
+                catch (Exception) { }
             }
             Properties.Settings.Default.Save();
             regKey.Close();
         }
 
+        //luanch spotify
         private void linkLabel2_Click(object sender, EventArgs e)
         {
-            if (linkLabel2.Text.Equals("(Luanch Spotify)"))
-            {
-                System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Spotify\\SpotifyLauncher.exe");
-            }
-            else{
-                foreach (var process in Process.GetProcessesByName("Spotify"))
-                {
-                    process.Kill();
-                }
-                System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Spotify\\SpotifyLauncher.exe");
-            }
-            
+            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Spotify\\SpotifyLauncher.exe");
         }
 
+        //lyrics link
         private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://genius.com/search?q=" + linkLabel3.Tag.ToString());
         }
 
+        //youtube link
         private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://www.youtube.com/results?search_query=" + linkLabel3.Tag.ToString());
+        }
+
+        //github link
+        private void linkLabel1_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/vishwenga/SpotiMute");
         }
     }
 }

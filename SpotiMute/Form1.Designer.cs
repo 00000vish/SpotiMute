@@ -40,7 +40,6 @@
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.label2 = new System.Windows.Forms.Label();
-            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.linkLabel3 = new System.Windows.Forms.LinkLabel();
@@ -138,12 +137,6 @@
             this.label2.Size = new System.Drawing.Size(96, 13);
             this.label2.TabIndex = 5;
             this.label2.Text = "✔ Spotify detected";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
-            // 
-            // timer2
-            // 
-            this.timer2.Interval = 500;
-            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
             // checkBox3
             // 
@@ -211,7 +204,6 @@
             this.MinimizeBox = false;
             this.Name = "Form1";
             this.Text = "SpotiMute";
-            this.Deactivate += new System.EventHandler(this.Form1_Deactivate);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -230,7 +222,6 @@
         private System.Windows.Forms.ToolStripMenuItem openSpotiMuteToolStripMenuItem;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.LinkLabel linkLabel2;
         private System.Windows.Forms.LinkLabel linkLabel3;
