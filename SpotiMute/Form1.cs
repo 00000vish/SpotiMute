@@ -37,6 +37,7 @@ namespace SpotiMute
                 checkBox1.Enabled = false;                
                 linkLabel2.Visible = true;
                 linkLabel2.Text = "(Luanch Spotify)";
+                timer2.Start();
             }
             else
             {
@@ -202,6 +203,13 @@ namespace SpotiMute
         private void linkLabel1_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/vishwenga/SpotiMute");
+        }
+
+        //when spotiMute is waiting for spotify to start
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            spotifyID = Program.getSpotifyProcessId();
+            startMuter();
         }
     }
 }

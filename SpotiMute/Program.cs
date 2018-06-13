@@ -21,24 +21,39 @@ namespace SpotiMute
 
         static void Main(string[] args)
         {
-            alreadyRunning();
+            initLogics();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1(getSpotifyProcessId()));           
+            Application.Run(new Form1(getSpotifyProcessId()));
+
+        }
+
+        public static void initLogics()
+        {
+            alreadyRunning();
+            startSpotify();
+        }
+
+        //starts spotify
+        public static void startSpotify()
+        {
+            if (Properties.Settings.Default.restartSpotify) {
+                System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Spotify\\SpotifyLauncher.exe");
+            }
             
         }
-        
+
         //if the program is already running its closed
         public static void alreadyRunning()
         {
             Process[] proc = Process.GetProcesses();
             foreach (Process item in proc)
             {
-                if(item.ProcessName.Equals("SpotiMute"))
+                if (item.ProcessName.Equals("SpotiMute"))
                 {
-                    if(item.Id != Process.GetCurrentProcess().Id)
+                    if (item.Id != Process.GetCurrentProcess().Id)
                     {
-                        item.Kill();  
+                        item.Kill();
                     }
                 }
             }
@@ -66,20 +81,20 @@ namespace SpotiMute
         {
             foreach (var item in id)
             {
-                if(item != -1)
-                VolumeMixer.SetApplicationVolume(item, 0f);
+                if (item != -1)
+                    VolumeMixer.SetApplicationVolume(item, 0f);
             }
 
-        } 
-        
+        }
+
         //unmute all spotify process in the id array
         public static void unMuteSpotify(int[] id)
         {
             foreach (var item in id)
             {
                 if (item != -1)
-                VolumeMixer.SetApplicationVolume(item, 100f);
-            }           
+                    VolumeMixer.SetApplicationVolume(item, 100f);
+            }
         }
 
         //getWindow title of spotify
