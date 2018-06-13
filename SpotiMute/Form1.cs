@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -34,6 +35,8 @@ namespace SpotiMute
                 checkBox1.Checked = true;
                 checkBox1.Enabled = false;
                 timer2.Enabled = true;
+                linkLabel2.Visible = true  ;
+                linkLabel2.Text = "(Luanch Spotify)";
             }
             else
             {                
@@ -42,6 +45,8 @@ namespace SpotiMute
                 checkBox1.Enabled = true;
                 checkBox1.Checked = false;
                 timer2.Enabled = false;
+                linkLabel2.Visible = true;
+                linkLabel2.Text = "(Not working?)";
             }
         }
 
@@ -202,7 +207,18 @@ namespace SpotiMute
 
         private void linkLabel2_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Spotify\\Spotify.exe");
+            if (linkLabel2.Text.Equals("(Luanch Spotify)"))
+            {
+                System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Spotify\\SpotifyLauncher.exe");
+            }
+            else{
+                foreach (var process in Process.GetProcessesByName("Spotify"))
+                {
+                    process.Kill();
+                }
+                System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Spotify\\SpotifyLauncher.exe");
+            }
+            
         }
 
         private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -213,6 +229,6 @@ namespace SpotiMute
         private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://www.youtube.com/results?search_query=" + linkLabel3.Tag.ToString());
-        }   
+        }
     }
 }
