@@ -20,11 +20,18 @@ namespace SpotiMute
         //init logics
         public Form1(int[] inSpotifyId)
         {
-            InitializeComponent();
             spotifyID = inSpotifyId;
+            InitializeComponent();
+            initLogics();
+            startMuter();
+        }
+
+        private void initLogics()
+        {
+            Program.muteSpotify(spotifyID);
+            Program.unMuteSpotify(spotifyID); //sometimes the initial unmute does not get registered idk why            
             checkBox2.Checked = Properties.Settings.Default.startWindow;
             checkBox3.Checked = Properties.Settings.Default.restartSpotify;
-            startMuter();
         }
 
         private void startMuter()
