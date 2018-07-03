@@ -111,7 +111,7 @@ namespace SpotiMute
                     if (item != -1)
                     {
                         String tempsongName = Program.GetWindowTitle(item);
-                        if (tempsongName.Contains("-"))
+                        if (tempsongName.Contains(" - "))
                         {
                             songName = tempsongName;
 
