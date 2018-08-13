@@ -13,8 +13,6 @@ namespace SpotiMute
 {
     public partial class Form1 : Form
     {
-
-        bool spotifyMuted = false;
         int[] spotifyID = null;
 
         //init logics
@@ -27,9 +25,7 @@ namespace SpotiMute
         }
 
         private void initLogics()
-        {
-            Program.muteSpotify(spotifyID);
-            Program.unMuteSpotify(spotifyID); //sometimes the initial unmute does not get registered idk why            
+        {       
             checkBox2.Checked = Properties.Settings.Default.startWindow;
             checkBox3.Checked = Properties.Settings.Default.restartSpotify;
         }
@@ -41,7 +37,7 @@ namespace SpotiMute
                 label2.Text = "✘ waiting for Spotify...";
                 label2.ForeColor = Color.Red;
                 checkBox1.Checked = true;
-                checkBox1.Enabled = false;                
+                checkBox1.Enabled = false;
                 linkLabel2.Visible = true;
                 linkLabel2.Text = "(Luanch Spotify)";
                 timer2.Start();
@@ -51,7 +47,7 @@ namespace SpotiMute
                 label2.Text = "✔ Spotify detected";
                 label2.ForeColor = Color.Green;
                 checkBox1.Enabled = true;
-                checkBox1.Checked = false;                
+                checkBox1.Checked = false;
                 linkLabel2.Visible = false;
             }
         }
@@ -127,24 +123,19 @@ namespace SpotiMute
                     linkLabel3.Tag = songName;
                     linkLabel3.Visible = true;
                     linkLabel4.Visible = true;
-                    if (spotifyMuted)
-                    {
-                        Program.unMuteSpotify(spotifyID);
-                        spotifyMuted = false;
-                    }
+                    Program.unMuteSpotify(spotifyID);
                 }
                 else
                 {
-                    Text = "SpotiMute";
-                    Program.muteSpotify(spotifyID);
-                    spotifyMuted = true;
+                    Text = "SpotiMute";                    
                     linkLabel3.Visible = false;
                     linkLabel4.Visible = false;
+                    Program.muteSpotify(spotifyID);
                 }
             }
             catch (ArgumentException) { spotifyID[0] = -1; startMuter(); }
         }
-        
+
         //auto start spotify
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
